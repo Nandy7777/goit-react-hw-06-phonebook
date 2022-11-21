@@ -1,3 +1,4 @@
+import { addContact, deleteContact, setStatusFilter } from 'redux/actions';
 const startContacts = [
   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
   { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
@@ -10,41 +11,32 @@ const initialState = {
   filter: '',
 };
  
-
 export const rootReducer = (state = initialState, action) => {
-  // Редюсер розрізняє екшени за значенням властивості type
     switch (action.type) {
-        case "contacts/addContact": {
-            return {
-              ...state,
-              contacts: [
-                // в якому є всі існуючі завдання
-                ...state.contacts,
-                // та об'єкт нового завдання
-                action.payload,
-              ],
-            };
-        }
-        case "contacts/deleteContact": {
-           return {
-             ...state,
-             contacts: state.contacts.filter(
-               contact => contact.id !== action.payload
-             ),
-           };
+      case addContact.type: {
+        return {
+          ...state,
+          contacts: [
+            ...state.contacts,
+            action.payload,
+          ],
+        };
       }
-      case "filters/setStatusFilter": {
+      case deleteContact.type: {
+        return {
+          ...state,
+          contacts: state.contacts.filter(
+            contact => contact.id !== action.payload
+          ),
+        };
+      }
+      case setStatusFilter.type: {
         return {
           ...state,
           filter: action.payload,
         };
-        }
-        
-    // Залежно від типу екшену виконуватиметься різна логіка
-    default:
-      // Кожен редюсер отримує всі екшени, відправлені в стор.
-      // Якщо редюсер не повинен обробляти якийсь тип екшену,
-      // необхідно повернути наявний стан без змін.
-      return state;
-  }
+      }
+      default:
+        return state;
+    }
 };
