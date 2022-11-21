@@ -1,67 +1,85 @@
-import { useState } from 'react';
 import ContactList from './ContactList';
 import ContactForm from './ContactForm';
 import Filter from './Filter';
-import shortid from 'shortid';
-import useLocalStorage from 'hooks/useLocalStorage';
-
+import { useSelector } from 'react-redux';
+import {getContacts} from '../redux/selectors';
+import { useEffect } from 'react';
 
 export default function App() {
 
-   const startContacts = [
-     { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-     { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-     { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-   ];
-  
-  const [contacts, setContacts] = useLocalStorage(startContacts);
-  const [filter, setFilter] = useState('');
+  const contacts = useSelector(getContacts);
 
-  const formSubmitHandler =  ({ name, number })  => {
-    const newContact = {
-      id: shortid.generate(),
-      name,
-      number,
-    };
-    
-    if (
-      contacts.some(
-        option => option.name.toLowerCase() === name.toLowerCase()
-      )
-    ) {
-      alert(`${name} is already in contacts.`);
-      return;
-    } else if (contacts.some(option => option.number === number)) {
-      alert(`${number} is already in contacts.`);
-      return;
-    }
-    setContacts(prevState => [...prevState, newContact]);
-  };
-
-  const changeFilter = event => {
-    setFilter(event.currentTarget.value);
-  };
-
-  const deleteContact = contactId => {
-    setContacts(prevState => prevState.filter(contact => contact.id !== contactId))
-  };
-  
-  const visibleContacts = contacts
-    .filter(contact => {
-      return contact.name.toLowerCase().includes(filter.toLowerCase());
-    })
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={formSubmitHandler} />
+      <ContactForm />
       <h2>Contacts</h2>
-      <Filter value={filter} onChange={changeFilter} />
-      <ContactList contacts={visibleContacts} onDelete={deleteContact} />
+      <Filter />
+      <ContactList />
     </div>
   );
 }
+
+// export default function App() {
+
+  //  const startContacts = [
+  //    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+  //    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+  //    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+  //    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  //  ];
+  
+  // const [contacts, setContacts] = useLocalStorage(startContacts);
+  // const [filter, setFilter] = useState('');
+
+  // const formSubmitHandler =  ({ name, number })  => {
+  //   const newContact = {
+  //     id: shortid.generate(),
+  //     name,
+  //     number,
+  //   };
+    
+  //   if (
+  //     contacts.some(
+  //       option => option.name.toLowerCase() === name.toLowerCase()
+  //     )
+  //   ) {
+  //     alert(`${name} is already in contacts.`);
+  //     return;
+  //   } else if (contacts.some(option => option.number === number)) {
+  //     alert(`${number} is already in contacts.`);
+  //     return;
+  //   }
+  //   setContacts(prevState => [...prevState, newContact]);
+  // };
+
+  // const changeFilter = event => {
+  //   setFilter(event.currentTarget.value);
+  // };
+
+  // const deleteContact = contactId => {
+  //   setContacts(prevState => prevState.filter(contact => contact.id !== contactId))
+  // };
+  
+  // const visibleContacts = contacts
+  //   .filter(contact => {
+  //     return contact.name.toLowerCase().includes(filter.toLowerCase());
+  //   })
+
+  // return (
+  //   <div>
+  //     <h1>Phonebook</h1>
+  //     <ContactForm onSubmit={formSubmitHandler} />
+  //     <h2>Contacts</h2>
+  //     <Filter value={filter} onChange={changeFilter} />
+  //     <ContactList contacts={visibleContacts} onDelete={deleteContact} />
+  //   </div>
+  // );
+// }
 
 // class App extends Component {
 //   state = {
