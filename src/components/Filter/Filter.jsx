@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setStatusFilter } from 'redux/actions';
+import { setStatusFilter } from 'redux/contactsSlice';
 import { Label, Input } from '../ContactForm/ContactForm.styled';
 
 const Filter = () => {
